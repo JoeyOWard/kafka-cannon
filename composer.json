@@ -8,7 +8,6 @@
         }
     ],
     "require": {
-        "fzaninotto/faker": "^1.8"
     },
     "minimum-stability": "stable",
     "license": "MIT",
