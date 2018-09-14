@@ -1,0 +1,11 @@
+{
+    "name": "joeward/kafka-cannon",
+    "description": "Fires events at kafka",
+    "authors": [
+        {
+            "name": "Joe Ward",
+            "email": "joe.ward@enta.net"
+        }
+    ],
+    "require": {}
+}
