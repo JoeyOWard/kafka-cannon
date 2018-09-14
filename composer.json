@@ -7,5 +7,17 @@
             "email": "joe.ward@enta.net"
         }
     ],
-    "require": {}
+    "require": {
+        "fzaninotto/faker": "^1.8"
+    },
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "KafkaCannon\\": "src/"
+        }
+    },
+
+  "bin": ["src/kafka-fire"]
+
 }
