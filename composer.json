@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-      "symfony/yaml": "^4.1",
+      "symfony/yaml": "^4.1"
     },
     "minimum-stability": "stable",
     "license": "MIT",
