@@ -66,7 +66,7 @@ Use
 Call kafka-fire from project root 
 
 ```bash
-$> vendor/joeward/kafka-fire
+$> vendor/joeward/kafka-cannon/src/kafka-fire
 ```
 
 
