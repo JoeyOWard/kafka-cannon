@@ -13,7 +13,5 @@ if (is_file($autoload = getcwd() . '/vendor/autoload.php')) {
     require $autoload;
 }
 
-
-
 $generate = new GenerateEvents();
 $generate->GenerateKafkaData();

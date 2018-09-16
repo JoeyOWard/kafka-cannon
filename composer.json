@@ -18,6 +18,6 @@
         }
     },
 
-  "bin": ["src/kafka-fire"]
+    "bin": ["src/kafka-fire"]
 
 }

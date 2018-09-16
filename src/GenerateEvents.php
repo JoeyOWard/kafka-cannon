@@ -28,7 +28,7 @@ class GenerateEvents
 
         $this->readYaml();
 
-        var_dump($this->dataToSend);
+        //var_dump($this->dataToSend);
 
         for ($x = 0; $x <= $this->ammo; $x++) {
 
