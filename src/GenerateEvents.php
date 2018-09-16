@@ -13,14 +13,10 @@ use Symfony\Component\Yaml\Yaml;
 class GenerateEvents
 {
 
-    protected $topic;
+    protected $dataToSend;
     protected $broker;
-    protected $payload;
-    protected $ontUrl;
     protected $ammo;
     protected $yaml;
-    protected $ontTopic;
-    protected $conTopic;
 
     public function __construct(){
 
@@ -29,128 +25,122 @@ class GenerateEvents
 
     public function GenerateKafkaData(){
 
+
         $this->readYaml();
 
-        for ($x = 0; $x <= $this->ammo; $x++) {
-
-            $this->CreateOnt();
-            $this->PushToKafka();
-
-        }
-
-        printf("Fired " .$this->ammo ." ONTS \n");
-
+        var_dump($this->dataToSend);
 
         for ($x = 0; $x <= $this->ammo; $x++) {
 
-            $this->CreateConnection();
-            $this->PushToKafka();
+            foreach($this->dataToSend as $data){
+                $this->PushToKafka($data);
+            }
 
         }
 
-        printf("Fired " .$this->ammo ." Connections \n");
+        printf("Fired " .$this->ammo ." times \n");
 
     }
 
 
 
-    public function PushToKafka(){
+    public function PushToKafka($data){
 
 
         $service = New KafkaService();
         
-        $service->payload($this->payload);
+        $service->payload($data->payload);
         $service->broker($this->broker);
-        $service->topic($this->topic);
+        $service->topic($data->topic);
         $service->produce();
 
+
+        printf("Fired a " . $data->topic ." at " . $this->broker . "\n");
 
     }
 
 
-    public function readYaml(){
+    public function readYaml()
+    {
 
-
-        $yaml = (Yaml::parseFile(getcwd().'/kafka-cannon.yml'));
+        $yaml = (Yaml::parseFile(getcwd() . '/kafka-cannon.yml'));
 
         $this->yaml = $yaml;
-        $this->parseYaml();
+        $this->generateKafkaEvent($this->yaml['topics']);
+        $this->broker = $yaml['broker'];
 
         printf("Kafka-Cannon.yml read successfully...\n");
 
     }
 
 
-    public function parseYaml(){
 
-        $this->ontTopic = $this->yaml['ont-topic'];
-        $this->conTopic = $this->yaml['connection-topic'];
-        $this->broker = $this->yaml['broker'];
-        $this->ammo = $this->yaml['ammo'];
-
-    }
+    public function generateKafkaEvent($array){
 
 
-    public function CreateConnection(){
+
+        foreach ($array as $topic=>$data){
+
+            $kafkaData = new KafkaData();
+            $kafkaData->topic($topic);
+            $enabled = false;
+            $random = false;
+
+            if($data['random-data'] == 'true'){
+                $random = true;
+            }
+
+            foreach($data as $datatype=>$values){
+
+                if($datatype == 'enabled' && $values == 'true') {
+
+                    $enabled = true;
+                }
 
 
-         $id = rand();
+                if ($datatype == 'values') {
 
-         $con = [
-                'Id' => rand(),
-                 'Name' => 'CO'. rand(),
-                 'sVLAN_Restriction__c' => rand(),
-                 'Status__c' => 'In Service' ,
-                 'B_Port__c' => rand(),
-                 'B_Device__c' => rand(),
-                 'A_Port__c' =>rand(),
-                 'A_Device__c' =>rand()
-                ];
+                    foreach($values as $valueType=>$data){
 
-          $attributes = [
-                    'type' => 'connection__c',
-                    'url' => '/services/data/v37.0/sobjects/connection__c/' . $id
-          ];
+                        if($random == true){
 
-          $con['attributes'] = $attributes;
+                            if(!(isset($data))){
 
-          $json = json_encode($con);
+                                $values[$valueType] = rand();
+                            }
+                        }
+                    }
 
-          $this->topic = $this->conTopic;
-          $this->payload = $json;
+                    $valueArray = $values;
 
 
-    }
+                }
 
-    public function CreateOnt(){
+                if ($datatype == 'attribute-type') {
 
-        $id = rand();
+                    $kafkaData->type($values);
+                }
+            }
 
-        $ont = [
-            'Id' => $id,
-            'Name' => 'ONT'. rand(),
-            'FSAN__c' => rand(),
-            'OLT__c' => rand(),
-            'OLT_Port__c' => '20/10',
-            'Property__c' => rand(),
-            'Serial_Number__c' =>rand()
-        ];
+        if($enabled == true) {
 
-        $attributes = [
-            'type' => 'ONT__c',
-            'url' => '/services/data/v37.0/sobjects/ONT__c/' . $id
-        ];
+            $attributes = [
+                'type' => $kafkaData->type,
+                'url' => '/services/data/v37.0/sobjects/' . $kafkaData->type . '/' . $valueArray['Id']
+            ];
 
-        $ont['attributes'] = $attributes;
+            $valueArray['attributes'] = $attributes;
 
-        $json = json_encode($ont);
+            $json = json_encode($valueArray);
 
-        $this->topic = $this->ontTopic;
-        $this->payload = $json;
+            $kafkaData->payload($json);
 
+            $this->dataToSend[] = $kafkaData;
+        }
+
+        }
 
     }
-
 
 
 }

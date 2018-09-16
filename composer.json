@@ -1,5 +1,5 @@
 {
-    "name": "joeward/kafka-cannon",
+    "name": "entanet-qa/kafka-cannon",
     "description": "Fires events at kafka",
     "authors": [
         {
