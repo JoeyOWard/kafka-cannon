@@ -28,13 +28,31 @@ class GenerateEvents
 
         $this->readYaml();
 
-        //var_dump($this->dataToSend);
+        if($this->order == 'sequential') {
 
-        for ($x = 0; $x <= $this->ammo; $x++) {
+            printf("Using Sequential Order \n");
 
-            foreach($this->dataToSend as $data){
-                $this->PushToKafka($data);
+            for ($x = 0; $x <= $this->ammo; $x++) {
+
+                foreach ($this->dataToSend as $data) {
+                    $this->PushToKafka($data);
+                }
+
             }
+        }elseif ($this->order == 'random'){
+
+            printf("Using Random Order \n");
+
+            $size = count($this->dataToSend);
+
+            for ($x = 0; $x <= $this->ammo; $x++) {
+
+                $number = rand(0, $size-1);
+
+                $this->PushToKafka($this->dataToSend[$number]);
+
+            }
+
 
         }
 
@@ -68,6 +86,8 @@ class GenerateEvents
         $this->yaml = $yaml;
         $this->generateKafkaEvent($this->yaml['topics']);
         $this->broker = $yaml['broker'];
+        $this->order = $yaml['order'];
+        $this->ammo = $yaml['ammo'];
 
         printf("Kafka-Cannon.yml read successfully...\n");
 
@@ -98,7 +118,7 @@ class GenerateEvents
                 }
 
 
-                if ($datatype == 'values') {
+                if ($datatype == 'payload') {
 
                     foreach($values as $valueType=>$data){
 
