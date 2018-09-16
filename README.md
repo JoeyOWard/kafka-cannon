@@ -9,7 +9,7 @@ Installing
 ----------------
 
 ```bash
-$> composer require entanet-qa/kafka-cannon
+$> composer require joeward/kafka-cannon
 ```
 
 
@@ -78,7 +78,7 @@ $> vendor/joeward/kafka-cannon/src/kafka-fire.php
 Known Issues
 ----------------
 
-Not in bin, needs different fire modes.
+Not in bin
  
 
 Notes
