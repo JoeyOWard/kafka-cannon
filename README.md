@@ -15,19 +15,21 @@ $> composer require entanet-qa/kafka-cannon
 
 Ensure that you have setup kafka-cannon.yml as below
 
-Topics have topic name underneath  
+Topics: Have topic name underneath  
 
-Payload information is stored within values  
+Payload: Information is stored within payload. These can be hard coded or left as blank/used with the random-data option    
 
-attribute-type is the type which is also used in the url  
+Attribute-type: Is the type which is also used in the url  
 
-enabled signifies if to include the topic for testing, true/false value  
+Enabled: Signifies if to include the topic for testing, true/false value  
 
-random-data signifies if you want to seed your blank payload values with random data. true/false value  
+Random-data: signifies if you want to seed your blank payload values with random data. true/false value  
 
-broker is the kafka url  
+Broker: Is the kafka url
 
-ammo is how many times you want the topics to be published 
+Order: Choose between sequential or random. Sequential fires the topics as displayed in the yaml, random means order is random    
+
+Ammo: How many times you want the topics to be published/fired   
 
   
 
@@ -36,7 +38,7 @@ ammo is how many times you want the topics to be published
 ```yaml
 topics:
     test_topic:
-            values:
+            payload:
                   Id: 123
                   Name: testname
                   testfield:
@@ -47,7 +49,7 @@ topics:
             enabled: true
             random-data: true
     my_other_topic:
-            values:
+            payload:
                   Id: 456
                   Name: testname2
                   otherfield:
@@ -56,6 +58,7 @@ topics:
             enabled: true
             random-data: true
 broker: 1
+order: sequential
 ammo: 5
 
 ```

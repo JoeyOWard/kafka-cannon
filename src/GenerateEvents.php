@@ -25,7 +25,7 @@ class GenerateEvents
 
     public function GenerateKafkaData(){
 
-
+        
         $this->readYaml();
 
         if($this->order == 'sequential') {
